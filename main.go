@@ -4,20 +4,18 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	"core/endpoints"
+	"core/config"
+	"core/di"
+	_ "core/endpoints"
+	"core/routing"
 )
 
 func main() {
-	//cfg, err := config.LoadConfig()
-	//if err != nil {
-	//	panic(err)
-	//}
-	//ctx := context.ModuleCtx
-	//ctx.Init(cfg, nil)
+	cfg := config.LoadConfig()
+	di.GetServiceLocator(cfg)
 
 	router := gin.Default()
-	// 设置所有注册的端点
-	endpoints.SetupRoutes(router, nil)
+	routing.SetupRoutes(router)
 
-	router.Run() // 在 0.0.0.0:8080 上监听
+	router.Run(cfg.GetAddr())
 }
